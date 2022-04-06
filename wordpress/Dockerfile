@@ -1,30 +1,49 @@
 FROM php:8.1-fpm
 
-ENV PHP_INI_DIR /usr/local/etc/php
-COPY ./php.ini "$PHP_INI_DIR/php.ini"
-RUN CFLAGS="$CFLAGS -D_GNU_SOURCE" docker-php-ext-install sockets
+# Arguments defined in docker-compose.yml
+ARG user
+ARG uid
 
-RUN apt-get -y update && apt-get install -y \
-    g++ \
-    libzip-dev \
-    libxml2-dev \
-    libicu-dev \
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
     libpng-dev \
-    zlib1g-dev
+    libonig-dev \
+    libxml2-dev \
+    libmcrypt-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    nodejs \
+    npm
 
-RUN docker-php-ext-install mysqli 
-RUN docker-php-ext-configure zip
-RUN docker-php-ext-install zip
-RUN docker-php-ext-install opcache
-RUN docker-php-ext-install gd
+#RUN pecl install mcrypt-1.0.4
+RUN npm cache clean -f
+RUN npm install -g n
+RUN n stable
 
-RUN docker-php-ext-configure intl
-RUN docker-php-ext-install intl
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install soap
+# PHP extensions
+RUN docker-php-ext-install mysqli mbstring exif pcntl bcmath gd zip opcache intl
+#RUN docker-php-ext-enable mcrypt
 
-WORKDIR /var/www/html/
+# Latest Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Create system user to run Composer and Artisan commands
+RUN useradd -G www-data,root -u $uid -d /home/$user $user
+RUN mkdir -p /home/$user/.composer && \
+    chown -R $user:$user /home/$user
+
+WORKDIR /var/www/html
 
 COPY ./src /var/www/html
 COPY ./unt-config.php /var/www/html
 RUN chown -R www-data:www-data /var/www/html/*
+
+WORKDIR /var/www/html/wp-content/themes/unt
+RUN npm install --save --legacy-peer-deps
+
+USER $user
