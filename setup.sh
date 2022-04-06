@@ -21,3 +21,4 @@ if [ -f "$PWD/tmp/wordpress.tar.gz" ]; then
     mv $PWD/wordpress/* $PWD/../wordpress/src
     rm -rf $PWD/wordpress
 fi
+
