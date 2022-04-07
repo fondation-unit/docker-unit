@@ -28,7 +28,14 @@ Vagrantfile
 .DS_Store
 
 # Custom
-wordpress/src
+wordpress/src/*.*
+wordpress/src/wp-admin
+wordpress/src/wp-includes
+wordpress/src/wp-content/*.*
+wordpress/src/wp-content/languages
+wordpress/src/wp-content/plugins
+wordpress/src/wp-content/themes/*
+!wordpress/src/wp-content/themes/unt
 db_data
 data/*
 tmp
