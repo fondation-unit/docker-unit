@@ -32,7 +32,6 @@ services:
     env_file: .env
     depends_on:
       - db
-      - redis
     volumes:
       #- wordpress:/var/www/html
       - type: bind
@@ -54,7 +53,7 @@ services:
     restart: always
     depends_on:
       - db
-      - app
+      - wordpress
     command: /bin/bash -c "envsubst '$$DOMAIN' < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
     environment:
       - DOMAIN=${DOMAIN}
