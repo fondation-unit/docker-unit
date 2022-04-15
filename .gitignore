@@ -34,6 +34,8 @@ wordpress/src/wp-includes
 wordpress/src/wp-content/*.*
 wordpress/src/wp-content/languages
 wordpress/src/wp-content/plugins
+wordpress/src/wp-content/upgrade
+wordpress/src/wp-content/uploads
 wordpress/src/wp-content/themes/*
 !wordpress/src/wp-content/themes/unt
 db_data
