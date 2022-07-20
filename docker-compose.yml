@@ -35,7 +35,7 @@ services:
     volumes:
       #- wordpress:/var/www/html
       - type: bind
-        source: wordpress/src
+        source: ./wordpress/src
         target: /var/www/html
     ports:
       - 9000:9000
@@ -48,7 +48,7 @@ services:
       - ./nginx/wordpress.template.conf:/etc/nginx/conf.d/default.template
       #- wordpress:/var/www/html:ro
       - type: bind
-        source: wordpress/src
+        source: ./wordpress/src
         target: /var/www/html
     restart: always
     depends_on:
