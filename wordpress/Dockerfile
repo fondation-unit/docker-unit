@@ -12,6 +12,9 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libmcrypt-dev \
     libzip-dev \
+    libwebp-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
     zip \
     unzip \
     nodejs \
@@ -26,8 +29,12 @@ RUN n stable
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # PHP extensions
-RUN docker-php-ext-install mysqli mbstring exif pcntl bcmath gd zip opcache intl
+RUN docker-php-ext-install mysqli mbstring exif pcntl bcmath zip opcache intl
 #RUN docker-php-ext-enable mcrypt
+
+# Configure GD for JPEG support
+RUN docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype
+RUN docker-php-ext-install gd
 
 # Latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
